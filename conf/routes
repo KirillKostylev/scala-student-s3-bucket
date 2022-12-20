@@ -1,0 +1,8 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+
+POST        /students                              controllers.StudentController.save
+GET         /students/:itemId                      controllers.StudentController.findById(itemId:String)
+GET         /students/:itemId/presigned-url        controllers.StudentController.getPresignedUrlById(itemId:String)
