@@ -3,6 +3,11 @@
 # ~~~~
 
 
-POST        /students                              controllers.StudentController.save
-GET         /students/:itemId                      controllers.StudentController.findById(itemId:String)
-GET         /students/:itemId/presigned-url        controllers.StudentController.getPresignedUrlById(itemId:String)
+POST          /students                          controllers.StudentController.save
+GET           /students/:id                      controllers.StudentController.findById(id:String)
+GET           /students/:id/presigned-url        controllers.StudentController.getPresignedUrlById(id:String)
+DELETE        /students/:id                      controllers.StudentController.deleteById(id)
+
+#SWAGGER DOCS
+GET           /docs/swagger.json                 controllers.Assets.at(path ="/public", file = "swagger.json")
+GET           /docs/swagger-ui/*file             controllers.Assets.at(path="/public/swagger-ui",file)

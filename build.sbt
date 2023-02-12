@@ -2,10 +2,14 @@ name := "playTestProject"
 
 version := "1.0"
 
-lazy val `playtestproject` = (project in file(".")).enablePlugins(PlayScala)
+lazy val `playtestproject` =
+  (project in file(".")).enablePlugins(PlayScala, SwaggerPlugin)
 
+swaggerDomainNameSpaces := Seq("models")
 resolvers += "Akka Snapshot Repository" at "https://repo.akka.io/snapshots/"
-scalaVersion := "2.13.5"
+resolvers += Resolver.jcenterRepo
+
+scalaVersion := "2.13.10"
 
 libraryDependencies ++= Seq(
   jdbc,
@@ -14,5 +18,7 @@ libraryDependencies ++= Seq(
   specs2 % Test,
   guice,
   "commons-io" % "commons-io" % "2.11.0",
-  "com.github.seratch" %% "awscala-s3" % "0.9.2"
+  "com.github.seratch" %% "awscala-s3" % "0.8.5",
+//  "io.swagger" %% "swagger-play2" % "1.7.1",
+  "com.iheart" %% "play-swagger" % "0.10.7"
 )

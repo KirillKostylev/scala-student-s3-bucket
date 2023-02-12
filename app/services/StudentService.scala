@@ -7,11 +7,12 @@ import java.net.URL
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-case class StudentService @Inject() (studentsBucket: AwsS3Bucket[Student])
-    extends Logging {
+case class StudentService @Inject() (
+    studentsBucket: AwsS3StudentsBucket
+) extends Logging {
 
   def save(studentRequest: StudentRequest): Student = {
-    val newStudent = validate(
+    val newStudent = validateAndUpdate(
       Student(
         firstName = studentRequest.firstName,
         secondName = studentRequest.secondName,
@@ -21,8 +22,8 @@ case class StudentService @Inject() (studentsBucket: AwsS3Bucket[Student])
       )
     )
 
-    studentsBucket.add(newStudent.id, newStudent)
-
+    studentsBucket.add(newStudent)
+    logger.info("Student was created with id = " + newStudent.id)
     newStudent
   }
 
@@ -34,9 +35,14 @@ case class StudentService @Inject() (studentsBucket: AwsS3Bucket[Student])
     studentsBucket.getPresignedUrl(id)
   }
 
-  private def validate(student: Student): Student = {
-    if (student.age > 0) student.validated = true
-    student
+  def deleteById(id: String): Unit = {
+    studentsBucket.deleteObjectByKey(id)
+    logger.info("Student was deleted with id = " + id)
+
   }
 
+  private def validateAndUpdate(student: Student): Student = {
+    if (student.age > 0) student.isValid = true
+    student
+  }
 }
