@@ -1,9 +1,8 @@
 package services
 
-import models.{Student, StudentRequest}
+import models.{PresignedUrlResponse, Student, StudentRequest}
 import play.api.Logging
 
-import java.net.URL
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -31,7 +30,7 @@ case class StudentService @Inject() (
     studentsBucket.getObjectByKey(id)
   }
 
-  def getPresignedUrlById(id: String): Option[URL] = {
+  def getPresignedUrlById(id: String): Option[PresignedUrlResponse] = {
     studentsBucket.getPresignedUrl(id)
   }
 

@@ -4,7 +4,7 @@ import play.api.libs.json.{Json, OFormat}
 
 case class StudentResponse(
     student: Student,
-    presignedUrl: String
+    presignedUrl: PresignedUrlResponse
 )
 
 object StudentResponse {

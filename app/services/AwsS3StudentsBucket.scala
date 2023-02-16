@@ -3,10 +3,9 @@ package services
 import awscala.s3.{Bucket, S3Object}
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.typesafe.config.ConfigFactory
-import models.Student
+import models.{PresignedUrlResponse, Student}
 import play.api.libs.json.Json
 
-import java.net.URL
 import javax.inject.Singleton
 
 @Singleton
@@ -26,18 +25,18 @@ class AwsS3StudentsBucket extends AwsS3Bucket {
     )
   }
 
-  def getPresignedUrl(key: String): Option[URL] = {
-    getS3Object(key)
-      .map(s3Object =>
-        s3Object.generatePresignedUrl(
-          awscala.DateTime.now().plusMinutes(presignedUrlTtl)
-        )
-      )
-  }
-
   def getObjectByKey(key: String): Option[Student] = {
     getS3Object(key)
       .map(s3Obj => Json.parse(s3Obj.content).as[Student])
+  }
+
+  def getPresignedUrl(key: String): Option[PresignedUrlResponse] = {
+    getS3Object(key)
+      .map(s3Object => {
+        val expiredTime = awscala.DateTime.now().plusMinutes(presignedUrlTtl)
+        val url = s3Object.generatePresignedUrl(expiredTime)
+        PresignedUrlResponse(url.toString, expiredTime.toString)
+      })
   }
 
   def deleteObjectByKey(key: String): Unit = {

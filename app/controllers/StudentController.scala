@@ -1,6 +1,7 @@
 package controllers
 
-import models.{Student, StudentRequest, StudentResponse}
+import models.{PresignedUrlResponse, Student, StudentRequest, StudentResponse}
+import play.api.Logging
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents}
 import services.StudentService
@@ -11,7 +12,8 @@ import javax.inject.{Inject, Singleton}
 class StudentController @Inject() (
     val controllerComponents: ControllerComponents,
     val studentService: StudentService
-) extends BaseController {
+) extends BaseController
+    with Logging {
 
   def save(): Action[AnyContent] = Action { implicit request =>
     val content = request.body
@@ -26,35 +28,32 @@ class StudentController @Inject() (
         val studentEntity = studentService.save(value)
         val presignedUtl = studentService.getPresignedUrlById(studentEntity.id)
         val newStudent = Json.toJson[StudentResponse](
-          StudentResponse(
-            studentEntity,
-            presignedUtl.getOrElse("").toString
-          )
+          StudentResponse(studentEntity, presignedUtl.orNull)
         )
-
         Created(newStudent)
       case None => BadRequest
     }
   }
 
   def findById(itemId: String): Action[AnyContent] = Action {
-    studentService.findById(itemId) match {
-      case Some(value) =>
-        Ok(Json.toJson[Student](value))
-      case None => NotFound
-    }
+    studentService
+      .findById(itemId)
+      .map(student => Ok(Json.toJson[Student](student)))
+      .getOrElse(NotFound)
   }
 
   def getPresignedUrlById(itemId: String): Action[AnyContent] = Action {
-    studentService.getPresignedUrlById(itemId) match {
-      case Some(value) =>
-        Ok(Json.toJson[String](value.toString))
-      case None => NotFound
-    }
+    studentService
+      .getPresignedUrlById(itemId)
+      .map(dto => Ok(Json.toJson[PresignedUrlResponse](dto)))
+      .getOrElse(NotFound)
   }
 
   def deleteById(studentId: String): Action[AnyContent] = Action {
-    studentService.deleteById(studentId)
-    Ok
+    studentService
+      .findById(studentId)
+      .map(_ => studentService.deleteById(studentId))
+      .map(_ => Ok)
+      .getOrElse(NotFound)
   }
 }

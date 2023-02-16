@@ -3,7 +3,7 @@
 # ~~~~
 
 
-POST          /students                          controllers.StudentController.save
+POST          /students                          controllers.StudentController.save()
 GET           /students/:id                      controllers.StudentController.findById(id:String)
 GET           /students/:id/presigned-url        controllers.StudentController.getPresignedUrlById(id:String)
 DELETE        /students/:id                      controllers.StudentController.deleteById(id)
