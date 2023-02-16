@@ -1,8 +1,8 @@
-#Play Scala project
+# Play Scala project
 
 It's a learning project based on Play Framework, performing actions with Student model and storing them in AWS S3 Bucket
 
-###Provided endpoints:
+### Provided endpoints:
 | METHOD | PATH | DESCRIPTION                          |
 |----|----|--------------------------------------|
 |POST|/students| Create new student                   |
@@ -10,7 +10,7 @@ It's a learning project based on Play Framework, performing actions with Student
 |GET|/students/:id | Read user by Identifier              |
 |GET|/students/:id/presigned-url | Create presigned URL to read student |
 
-###Project Prerequisites
+### Project Prerequisites
 * Java 8
 * SBT
 * AWS credentials (.aws/credentials)
