@@ -11,6 +11,9 @@ It's a learning project based on Play Framework, performing actions with Student
 |GET|/students/:id/presigned-url | Create presigned URL to read student |
 
 ### Project Prerequisites
+* Scala 2.13
 * Java 8
-* SBT
+* SBT 1.5
+* Play Framework 2.8.18
+* AWS Scala client - awscala-s3
 * AWS credentials (.aws/credentials)
